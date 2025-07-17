@@ -54,7 +54,7 @@ def get_pipeline():
         add_watermarker=False,
         controlnet=controlnet,
         vae=vae,
-        variant="fp16",
+        # variant="fp16",
         use_safetensors=True,
         resume_download=True,
     ).to(DEVICE)

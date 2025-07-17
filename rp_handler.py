@@ -76,7 +76,7 @@ PIPELINE = StableDiffusionXLControlNetPipeline.from_pretrained(
     "John6666/epicrealism-xl-vxvii-crystal-clear-realism-sdxl",
     controlnet=controlnet,
     torch_dtype=DTYPE,
-    variant="fp16" if DTYPE == torch.float16 else None,
+    # variant="fp16" if DTYPE == torch.float16 else None,
     safety_checker=None,
     requires_safety_checker=False,
     add_watermarker=False,
