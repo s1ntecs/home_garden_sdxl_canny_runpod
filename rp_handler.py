@@ -64,16 +64,10 @@ def pil_to_b64(img: Image.Image) -> str:
 
 
 # ------------------------- ЗАГРУЗКА МОДЕЛЕЙ ------------------------------ #
-controlnet = [
-    ControlNetModel.from_pretrained(
-        "SargeZT/sdxl-controlnet-seg",
-        torch_dtype=DTYPE
-    ),
-    ControlNetModel.from_pretrained(
-        "diffusers/controlnet-canny-sdxl-1.0",
-        torch_dtype=DTYPE
-    )
-]
+controlnet = ControlNetModel.from_pretrained(
+                "diffusers/controlnet-canny-sdxl-1.0",
+                torch_dtype=DTYPE
+            )
 
 PIPELINE = StableDiffusionXLControlNetPipeline.from_pretrained(
     # "RunDiffusion/Juggernaut-XL-v9",
@@ -118,7 +112,6 @@ def handler(job: Dict[str, Any]) -> Dict[str, Any]:
 
         negative_prompt = payload.get("negative_prompt", "")
         guidance_scale = float(payload.get("guidance_scale", 7.5))
-        prompt_strength = float(payload.get("prompt_strength", 0.8))
         steps = min(int(payload.get("steps", MAX_STEPS)), MAX_STEPS)
 
         seed = int(payload.get("seed", random.randint(0, MAX_SEED)))
@@ -145,15 +138,12 @@ def handler(job: Dict[str, Any]) -> Dict[str, Any]:
             negative_prompt=negative_prompt,
             image=control_image,
             controlnet_conditioning_scale=canny_scale,
-            strength=prompt_strength,
             num_inference_steps=steps,
             guidance_scale=guidance_scale,
             generator=generator,
         ).images
 
-        # ---- up-scale через рефайнер ----
         final = []
-        torch.cuda.empty_cache()
         for im in images:
             im = im.resize((orig_w, orig_h), Image.Resampling.LANCZOS).convert("RGB")
             ref = REFINER(
@@ -161,6 +151,7 @@ def handler(job: Dict[str, Any]) -> Dict[str, Any]:
                 num_inference_steps=refiner_steps, guidance_scale=refiner_scale
             ).images[0]
             final.append(ref)
+        torch.cuda.empty_cache()
 
         return {
             "images_base64": [pil_to_b64(i) for i in final],
