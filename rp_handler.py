@@ -137,6 +137,7 @@ def handler(job: Dict[str, Any]) -> Dict[str, Any]:
             prompt=prompt,
             negative_prompt=negative_prompt,
             image=control_image,
+            control_image=control_image,
             controlnet_conditioning_scale=canny_scale,
             num_inference_steps=steps,
             guidance_scale=guidance_scale,
