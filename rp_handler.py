@@ -72,7 +72,8 @@ controlnet = ControlNetModel.from_pretrained(
 PIPELINE = StableDiffusionXLControlNetPipeline.from_pretrained(
     # "RunDiffusion/Juggernaut-XL-v9",
     # "SG161222/RealVisXL_V5.0",
-    "misri/cyberrealisticPony_v90Alt1",
+    # "misri/cyberrealisticPony_v90Alt1",
+    "John6666/epicrealism-xl-vxvii-crystal-clear-realism-sdxl",
     controlnet=controlnet,
     torch_dtype=DTYPE,
     variant="fp16" if DTYPE == torch.float16 else None,

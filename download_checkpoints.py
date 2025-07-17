@@ -48,7 +48,8 @@ def get_pipeline():
     PIPELINE = StableDiffusionXLControlNetPipeline.from_pretrained(
         # "RunDiffusion/Juggernaut-XL-v9",
         # "SG161222/RealVisXL_V5.0",
-        "misri/cyberrealisticPony_v90Alt1",
+        # "misri/cyberrealisticPony_v90Alt1",
+        "John6666/epicrealism-xl-vxvii-crystal-clear-realism-sdxl",
         torch_dtype=torch.float16,
         add_watermarker=False,
         controlnet=controlnet,
