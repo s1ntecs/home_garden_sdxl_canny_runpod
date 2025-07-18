@@ -132,14 +132,20 @@ def handler(job: Dict[str, Any]) -> Dict[str, Any]:
         orig_w, orig_h = image_pil.size
 
         # input_image = image_pil.resize((new_w, new_h))
-        control_image = make_canny_condition(image_pil)
+        # control_image = make_canny_condition(image_pil)
+
+        image = np.array(image_pil)
+        image = cv2.Canny(image, 100, 200)
+        image = image[:, :, None]
+        image = np.concatenate([image, image, image], axis=2)
+        canny_image = Image.fromarray(image)
 
         # ------------------ генерация ---------------- #
         images = PIPELINE(
             prompt=prompt,
             negative_prompt=negative_prompt,
-            image=control_image,
-            control_image=control_image,
+            image=canny_image,
+            # control_image=control_image,
             controlnet_conditioning_scale=canny_scale,
             num_inference_steps=steps,
             guidance_scale=guidance_scale,
