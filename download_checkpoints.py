@@ -10,7 +10,7 @@ from diffusers import (
     
 )
 
-# from huggingface_hub import hf_hub_download
+from huggingface_hub import hf_hub_download
 
 # ------------------------- каталоги -------------------------
 os.makedirs("loras", exist_ok=True)
@@ -47,8 +47,8 @@ def get_pipeline():
                                         use_safetensors=True)
 
     PIPELINE = StableDiffusionXLControlNetPipeline.from_pretrained(
-        # "RunDiffusion/Juggernaut-XL-v9",
-        "SG161222/RealVisXL_V5.0",
+        "RunDiffusion/Juggernaut-XL-v9",
+        # "SG161222/RealVisXL_V5.0",
         # "misri/cyberrealisticPony_v90Alt1",
         # "John6666/epicrealism-xl-vxvii-crystal-clear-realism-sdxl",
         torch_dtype=torch.float16,
@@ -59,6 +59,15 @@ def get_pipeline():
         use_safetensors=True,
         resume_download=True,
     ).to(DEVICE)
+    
+    # PIPELINE = StableDiffusionXLControlNetPipeline.from_pretrained(
+    #     "RunDiffusion/Juggernaut-XL-v9",
+    #     torch_dtype=torch.float16,
+    #     variant="fp16",
+    #     use_saftensors=True,
+    #     controlnet=controlnet,
+    # ).to(DEVICE)
+
     PIPELINE.scheduler = UniPCMultistepScheduler.from_config(
         PIPELINE.scheduler.config)
 
