@@ -70,10 +70,8 @@ controlnet = ControlNetModel.from_pretrained(
             )
 
 PIPELINE = StableDiffusionXLControlNetPipeline.from_pretrained(
-    "RunDiffusion/Juggernaut-XL-v9",
-    # "SG161222/RealVisXL_V5.0",
-    # "misri/cyberrealisticPony_v90Alt1",
-    # "John6666/epicrealism-xl-vxvii-crystal-clear-realism-sdxl",
+    # "RunDiffusion/Juggernaut-XL-v9",
+    "SG161222/RealVisXL_V5.0",
     controlnet=controlnet,
     torch_dtype=DTYPE,
     variant="fp16" if DTYPE == torch.float16 else None,
@@ -132,20 +130,14 @@ def handler(job: Dict[str, Any]) -> Dict[str, Any]:
         orig_w, orig_h = image_pil.size
 
         # input_image = image_pil.resize((new_w, new_h))
-        # control_image = make_canny_condition(image_pil)
-
-        image = np.array(image_pil)
-        image = cv2.Canny(image, 100, 200)
-        image = image[:, :, None]
-        image = np.concatenate([image, image, image], axis=2)
-        canny_image = Image.fromarray(image)
+        control_image = make_canny_condition(image_pil)
 
         # ------------------ генерация ---------------- #
         images = PIPELINE(
             prompt=prompt,
             negative_prompt=negative_prompt,
-            image=canny_image,
-            # control_image=control_image,
+            image=control_image,
+            control_image=control_image,
             controlnet_conditioning_scale=canny_scale,
             num_inference_steps=steps,
             guidance_scale=guidance_scale,
