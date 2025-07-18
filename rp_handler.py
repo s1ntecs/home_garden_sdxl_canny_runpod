@@ -71,10 +71,12 @@ controlnet = ControlNetModel.from_pretrained(
 
 PIPELINE = StableDiffusionXLControlNetPipeline.from_pretrained(
     # "RunDiffusion/Juggernaut-XL-v9",
-    "SG161222/RealVisXL_V5.0",
+    # "SG161222/RealVisXL_V5.0",
+    "misri/cyberrealisticPony_v90Alt1",
+    # "John6666/epicrealism-xl-vxvii-crystal-clear-realism-sdxl",
     controlnet=controlnet,
     torch_dtype=DTYPE,
-    variant="fp16" if DTYPE == torch.float16 else None,
+    # variant="fp16" if DTYPE == torch.float16 else None,
     safety_checker=None,
     requires_safety_checker=False,
     add_watermarker=False,
@@ -137,6 +139,7 @@ def handler(job: Dict[str, Any]) -> Dict[str, Any]:
             prompt=prompt,
             negative_prompt=negative_prompt,
             image=control_image,
+            control_image=control_image,
             controlnet_conditioning_scale=canny_scale,
             num_inference_steps=steps,
             guidance_scale=guidance_scale,
